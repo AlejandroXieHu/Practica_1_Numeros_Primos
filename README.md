@@ -2,6 +2,9 @@
 
 ## Num_Primos.v
 
+El módulo recibe el valor de los 4 switches de la FPGA y determina si el número binario corresponde a un número primo.  
+Si el número es primo, el LED se enciende; en caso contrario, el LED permanece apagado.
+
 ```verilog
 module Num_Primos (
 
@@ -13,13 +16,13 @@ module Num_Primos (
 	always @(*)
 		begin
 			case (SW)	
-		    	4'b0010:LED = 1'b1;
+		    	4'b0010:LED = 1'b1;	// Estos son los números primos definidos del 2 al 13 y tienen como salida el 1 y se prende el LED
 				4'b0011:LED = 1'b1;
 				4'b0101:LED = 1'b1;
 				4'b0111:LED = 1'b1;
 				4'b1011:LED = 1'b1;
 				4'b1101:LED = 1'b1;
-				default:LED = 1'b0;
+				default:LED = 1'b0;	// El default es para que los números sin definir tengan como salida el 0 y se apague el LED
 			endcase
 		end
 
@@ -29,6 +32,8 @@ endmodule
 ---
 
 ## Código del testbench: Num_Primos_tb.v
+
+El testbench genera valores de entrada del 0 al 15 para verificar el funcionamiento del sistema durante la simulación.
 
 ```verilog
 module Num_Primos_tb();
