@@ -4,7 +4,17 @@ module BCD_4Displays_tb();
     wire [6:0] D_un, D_de, D_ce, D_mi;
     wire [3:0] unidades, decenas, centenas, millares;
 
-    BCD_4Displays dut(.bcd_in(bcd_in), .D_un(D_un), .D_de(D_de), .D_ce(D_ce), .D_mi(D_mi), .unidades(unidades), .decenas(decenas), .centenas(centenas), .millares(millares));
+    BCD_4Displays dut(
+        .bcd_in(bcd_in), 
+        .D_un(D_un), 
+        .D_de(D_de), 
+        .D_ce(D_ce), 
+        .D_mi(D_mi), 
+        .unidades(unidades), 
+        .decenas(decenas), 
+        .centenas(centenas), 
+        .millares(millares)
+    );
 
     initial 
         begin
