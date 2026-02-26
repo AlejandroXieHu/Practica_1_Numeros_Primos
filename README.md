@@ -84,6 +84,12 @@ endmodule
 
 ---
 
+## Testbench
+
+![Testbench](Practica_1_Numeros_Primos/Num_Primos_tb.png)
+
+---
+
 ## Simulación del testbench
 
 ![Simulación](Practica_1_Numeros_Primos/Num_Primos_SIM.png)
