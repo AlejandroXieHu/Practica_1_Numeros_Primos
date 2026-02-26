@@ -3,7 +3,10 @@ module BCD_module_tb();
     reg [3:0] bcd_in;
     wire [6:0] bcd_out;
 
-    BCD_module dut(.bcd_in(bcd_in), .bcd_out(bcd_out));
+    BCD_module dut(
+        .bcd_in(bcd_in), 
+        .bcd_out(bcd_out)
+    );
 
     initial 
         begin
