@@ -57,6 +57,10 @@ module BCD_module (
 endmodule
 ```
 
+### Testbench del módulo
+
+![Testbench](BCD_Module_tb.png)
+
 ---
 
 ## Código del testbench: BCD_Module_tb.v
@@ -96,11 +100,6 @@ module BCD_module_tb();
 
 endmodule
 ```
----
-
-## Testbench
-
-![Testbench](BCD_4Displays_tb.png)
 
 ---
 
@@ -195,6 +194,11 @@ module BCD_4Displays_tb();
 endmodule
 ```
 
+### Testbench del sistema
+
+![Testbench](BCD_4Displays_tb.png)
+
+---
 
 ## Simulación del Wrapper
 
