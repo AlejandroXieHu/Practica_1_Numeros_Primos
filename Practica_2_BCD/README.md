@@ -107,7 +107,7 @@ endmodule
 
 ## Simulación del testbench
 
-![Simulación](BCD_Module_SIM.png)
+![Simulación](BCD_Module_tb_SIM.png)
 
 ---
 
@@ -228,15 +228,5 @@ endmodule
 ---
 
 ## Pruebas con la tarjeta FPGA DE10-Lite
-
-### Prueba con valor 1023
-
-![Prueba 1023](BCD_4Displays_1023.jpeg)
-
-En esta prueba el sistema muestra correctamente el número 1023 en los cuatro displays.
-
----
-
-## Video demostración
 
 [Ver demostración](BCD_4Displays.mp4)
