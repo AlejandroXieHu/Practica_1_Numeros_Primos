@@ -32,28 +32,28 @@ Este módulo convierte un dígito BCD (0–9) a su representación en display de
 ```verilog
 module BCD_module (
 
-    input  [3:0] bcd_in,
-    output reg [6:0] bcd_out
+	input  [3:0] bcd_in,
+	output reg [6:0] bcd_out
 
 );
 
-    always @(*) 
-        begin
-            case (bcd_in)
-                4'b0000: bcd_out = ~7'b1111110;
-                4'b0001: bcd_out = ~7'b0110000;
-                4'b0010: bcd_out = ~7'b1101101;
-                4'b0011: bcd_out = ~7'b1111001;
-                4'b0100: bcd_out = ~7'b0110011;
-                4'b0101: bcd_out = ~7'b1011011;
-                4'b0110: bcd_out = ~7'b1011111;
-                4'b0111: bcd_out = ~7'b1110000;
-                4'b1000: bcd_out = ~7'b1111111;
-                4'b1001: bcd_out = ~7'b1111011;
-                default: bcd_out = ~7'b0000000;
-            endcase
-        end
-
+	always @(*) 
+		begin
+			case (bcd_in)
+				4'b0000:bcd_out = ~7'b1111110;
+				4'b0001:bcd_out = ~7'b0110000;
+				4'b0010:bcd_out = ~7'b1101101;
+				4'b0011:bcd_out = ~7'b1111001;
+				4'b0100:bcd_out = ~7'b0110011;
+				4'b0101:bcd_out = ~7'b1011011;
+				4'b0110:bcd_out = ~7'b1011111;
+				4'b0111:bcd_out = ~7'b1110000;
+				4'b1000:bcd_out = ~7'b1111111;
+				4'b1001:bcd_out = ~7'b1111011;
+				default:bcd_out = ~7'b0000000;
+			endcase
+		end
+	
 endmodule
 ```
 
@@ -69,19 +69,18 @@ module BCD_module_tb();
     reg [3:0] bcd_in;
     wire [6:0] bcd_out;
 
-    BCD_module dut(.bcd_in(bcd_in),.bcd_out(bcd_out));
+    BCD_module dut(
+        .bcd_in(bcd_in), 
+        .bcd_out(bcd_out)
+    );
 
     initial 
         begin
-            $display("Simulacion iniciada");
-
-            repeat (32)
-                begin
-                    bcd_in = $random % 16; #10;
-                end
-
-            $display("Simulacion finalizada");
-            $finish;
+            repeat (32) // 32 es el número de iteraciones de las repeticiones
+            begin
+                bcd_in = $random % 16; #10; // $random es para generar un número aleatorio y el % 16 es para dividir el número entre 16 y nos daría un número menor que 16
+            end
+                $finish;
         end
 
     initial 
@@ -132,15 +131,30 @@ module BCD_4Displays #(parameter N_in = 10, N_out = 7) (
     
 );
 
-    assign unidades  = bcd_in % 10;
-    assign decenas   = (bcd_in / 10) % 10;
-    assign centenas  = (bcd_in / 100) % 10;
-    assign millares  = (bcd_in / 1000) % 10;
+    assign unidades = bcd_in % 10;
+    assign decenas = (bcd_in / 10) % 10;
+    assign centenas = (bcd_in / 100) % 10;
+    assign millares = (bcd_in / 1000) % 10;
 
-    BCD_module Unidades (.bcd_in(unidades),.bcd_out(D_un));
-    BCD_module Decenas  (.bcd_in(decenas), .bcd_out(D_de));
-    BCD_module Centenas (.bcd_in(centenas),.bcd_out(D_ce));
-    BCD_module Millares (.bcd_in(millares),.bcd_out(D_mi));
+    BCD_module Unidades (
+        .bcd_in(unidades), 
+        .bcd_out(D_un)
+    );
+
+    BCD_module Decenas (
+        .bcd_in(decenas), 
+        .bcd_out(D_de)
+    );
+
+    BCD_module Centenas (
+        .bcd_in(centenas), 
+        .bcd_out(D_ce)
+    );
+
+    BCD_module Millares (
+        .bcd_in(millares), 
+        .bcd_out(D_mi)
+    );
 
 endmodule
 ```
@@ -159,34 +173,29 @@ module BCD_4Displays_tb();
     wire [3:0] unidades, decenas, centenas, millares;
 
     BCD_4Displays dut(
-        .bcd_in(bcd_in),
-        .D_un(D_un),
-        .D_de(D_de),
-        .D_ce(D_ce),
-        .D_mi(D_mi),
-        .unidades(unidades),
-        .decenas(decenas),
-        .centenas(centenas),
+        .bcd_in(bcd_in), 
+        .D_un(D_un), 
+        .D_de(D_de), 
+        .D_ce(D_ce), 
+        .D_mi(D_mi), 
+        .unidades(unidades), 
+        .decenas(decenas), 
+        .centenas(centenas), 
         .millares(millares)
     );
 
     initial 
         begin
-            $display("Simulacion iniciada");
-
             repeat (10)
-                begin
-                    bcd_in = $random % 1024; #10;
-                end
-
-            $display("Simulacion finalizada");
-            $finish;
+            begin
+                bcd_in = $random % 1024; #10;
+            end
+                $finish;
         end
 
     initial 
         begin
-            $monitor("bcd_in = %d, Unidades = %d, Decenas = %d, Centenas = %d, Millares = %d",
-                      bcd_in, unidades, decenas, centenas, millares);
+            $monitor("bcd_in = %d, Unidades = %d, Decenas = %d, Centenas = %d, Millares = %d", bcd_in, unidades, decenas, centenas, millares);
         end
 
     initial 
@@ -194,7 +203,7 @@ module BCD_4Displays_tb();
             $dumpfile("BCD_4Displays_tb.vcd");
             $dumpvars(0, BCD_4Displays_tb);
         end
-
+        
 endmodule
 ```
 
