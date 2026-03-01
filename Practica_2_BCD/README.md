@@ -1,8 +1,8 @@
 # Práctica 2: BCD
 
-## Wrapper para FPGA: BCD_4Displays_W.v
+## BCD_4Displays_W.v
 
-Este módulo conecta las entradas de los switches de la FPGA con los displays de 7 segmentos.
+El módulo wrapper conecta las entradas de los switches de la FPGA con el módulo principal `BCD_4Displays` y envía las salidas a los displays de 7 segmentos.
 
 ```verilog
 module BCD_4Displays_W (
@@ -25,7 +25,7 @@ endmodule
 
 ---
 
-## Módulo de conversión: BCD_Module.v
+## BCD_Module.v
 
 Este módulo convierte un dígito BCD (0–9) a su representación en display de 7 segmentos.
 
@@ -38,34 +38,30 @@ module BCD_module (
 );
 
     always @(*) 
-    begin
-        case (bcd_in)
-            4'b0000: bcd_out = ~7'b1111110;
-            4'b0001: bcd_out = ~7'b0110000;
-            4'b0010: bcd_out = ~7'b1101101;
-            4'b0011: bcd_out = ~7'b1111001;
-            4'b0100: bcd_out = ~7'b0110011;
-            4'b0101: bcd_out = ~7'b1011011;
-            4'b0110: bcd_out = ~7'b1011111;
-            4'b0111: bcd_out = ~7'b1110000;
-            4'b1000: bcd_out = ~7'b1111111;
-            4'b1001: bcd_out = ~7'b1111011;
-            default: bcd_out = ~7'b0000000;
-        endcase
-    end
+        begin
+            case (bcd_in)
+                4'b0000: bcd_out = ~7'b1111110;
+                4'b0001: bcd_out = ~7'b0110000;
+                4'b0010: bcd_out = ~7'b1101101;
+                4'b0011: bcd_out = ~7'b1111001;
+                4'b0100: bcd_out = ~7'b0110011;
+                4'b0101: bcd_out = ~7'b1011011;
+                4'b0110: bcd_out = ~7'b1011111;
+                4'b0111: bcd_out = ~7'b1110000;
+                4'b1000: bcd_out = ~7'b1111111;
+                4'b1001: bcd_out = ~7'b1111011;
+                default: bcd_out = ~7'b0000000;
+            endcase
+        end
 
 endmodule
 ```
 
-### Testbench del módulo
-
-![Testbench](BCD_Module_tb.png)
-
 ---
 
-## Código del testbench: BCD_Module_tb.v
+## BCD_Module_tb.v
 
-El testbench verifica el funcionamiento del módulo generando valores aleatorios de entrada.
+El testbench genera valores aleatorios para verificar el funcionamiento del módulo durante la simulación.
 
 ```verilog
 module BCD_module_tb();
@@ -73,33 +69,52 @@ module BCD_module_tb();
     reg [3:0] bcd_in;
     wire [6:0] bcd_out;
 
-    BCD_module dut(
-        .bcd_in(bcd_in), 
-        .bcd_out(bcd_out)
-    );
+    BCD_module dut(.bcd_in(bcd_in),.bcd_out(bcd_out));
 
     initial 
-    begin
-        repeat (32)
         begin
-            bcd_in = $random % 16; #10;
+            $display("Simulacion iniciada");
+
+            repeat (32)
+                begin
+                    bcd_in = $random % 16; #10;
+                end
+
+            $display("Simulacion finalizada");
+            $finish;
         end
-        $finish;
-    end
 
     initial 
-    begin
-        $monitor("bcd_in = %b, bcd_out = %b", bcd_in, bcd_out);
-    end
+        begin
+            $monitor("bcd_in = %b, bcd_out = %b", bcd_in, bcd_out);
+        end
 
     initial 
-    begin
-        $dumpfile("BCD_module_tb.vcd");
-        $dumpvars(0, BCD_module_tb);
-    end
+        begin
+            $dumpfile("BCD_module_tb.vcd");
+            $dumpvars(0, BCD_module_tb);
+        end
 
 endmodule
 ```
+
+---
+
+## Testbench
+
+![Testbench](BCD_Module_tb.png)
+
+---
+
+## Simulación del testbench
+
+![Simulación](BCD_Module_SIM.png)
+
+---
+
+## RTL
+
+![RTL](BCD_Module_RTL.png)
 
 ---
 
@@ -122,34 +137,19 @@ module BCD_4Displays #(parameter N_in = 10, N_out = 7) (
     assign centenas  = (bcd_in / 100) % 10;
     assign millares  = (bcd_in / 1000) % 10;
 
-    BCD_module Unidades (
-        .bcd_in(unidades), 
-        .bcd_out(D_un)
-    );
-
-    BCD_module Decenas (
-        .bcd_in(decenas), 
-        .bcd_out(D_de)
-    );
-
-    BCD_module Centenas (
-        .bcd_in(centenas), 
-        .bcd_out(D_ce)
-    );
-
-    BCD_module Millares (
-        .bcd_in(millares), 
-        .bcd_out(D_mi)
-    );
+    BCD_module Unidades (.bcd_in(unidades),.bcd_out(D_un));
+    BCD_module Decenas  (.bcd_in(decenas), .bcd_out(D_de));
+    BCD_module Centenas (.bcd_in(centenas),.bcd_out(D_ce));
+    BCD_module Millares (.bcd_in(millares),.bcd_out(D_mi));
 
 endmodule
 ```
 
 ---
 
-## Código del testbench: BCD_4Displays_tb.v
+## BCD_4Displays_tb.v
 
-El testbench genera valores aleatorios entre 0 y 1023 para verificar la correcta separación de los dígitos y su conversión.
+El testbench genera valores entre 0 y 1023 para verificar la correcta separación de los dígitos y su conversión.
 
 ```verilog
 module BCD_4Displays_tb();
@@ -159,50 +159,56 @@ module BCD_4Displays_tb();
     wire [3:0] unidades, decenas, centenas, millares;
 
     BCD_4Displays dut(
-        .bcd_in(bcd_in), 
-        .D_un(D_un), 
-        .D_de(D_de), 
-        .D_ce(D_ce), 
-        .D_mi(D_mi), 
-        .unidades(unidades), 
-        .decenas(decenas), 
-        .centenas(centenas), 
+        .bcd_in(bcd_in),
+        .D_un(D_un),
+        .D_de(D_de),
+        .D_ce(D_ce),
+        .D_mi(D_mi),
+        .unidades(unidades),
+        .decenas(decenas),
+        .centenas(centenas),
         .millares(millares)
     );
 
     initial 
-    begin
-        repeat (10)
         begin
-            bcd_in = $random % 1024; #10;
+            $display("Simulacion iniciada");
+
+            repeat (10)
+                begin
+                    bcd_in = $random % 1024; #10;
+                end
+
+            $display("Simulacion finalizada");
+            $finish;
         end
-        $finish;
-    end
 
     initial 
-    begin
-        $monitor("bcd_in = %d, Unidades = %d, Decenas = %d, Centenas = %d, Millares = %d",
-                  bcd_in, unidades, decenas, centenas, millares);
-    end
+        begin
+            $monitor("bcd_in = %d, Unidades = %d, Decenas = %d, Centenas = %d, Millares = %d",
+                      bcd_in, unidades, decenas, centenas, millares);
+        end
 
     initial 
-    begin
-        $dumpfile("BCD_4Displays_tb.vcd");
-        $dumpvars(0, BCD_4Displays_tb);
-    end
+        begin
+            $dumpfile("BCD_4Displays_tb.vcd");
+            $dumpvars(0, BCD_4Displays_tb);
+        end
 
 endmodule
 ```
 
-### Testbench del sistema
+---
+
+## Testbench
 
 ![Testbench](BCD_4Displays_tb.png)
 
 ---
 
-## Simulación del Wrapper
+## Simulación del testbench
 
-![Waveform](BCD_4Displays_W.png)
+![Simulación](BCD_4Displays_SIM.png)
 
 ---
 
@@ -212,8 +218,16 @@ endmodule
 
 ---
 
-## Prueba en FPGA / Demostración
+## Pruebas con la tarjeta FPGA DE10-Lite
 
-Video del funcionamiento del sistema en la tarjeta FPGA.
+### Prueba con valor 1023
+
+![Prueba 1023](BCD_4Displays_1023.jpeg)
+
+En esta prueba el sistema muestra correctamente el número 1023 en los cuatro displays.
+
+---
+
+## Video demostración
 
 [Ver demostración](BCD_4Displays.mp4)
