@@ -1016,8 +1016,3 @@ endmodule
 ## Prueba en la tarjeta FPGA
 
 [Ver video de la prueba](Practica_4_Password/Password.mp4)
-
-
-## Prueba en la tarjeta FPGA
-
-[Ver video de la prueba](Practica_4_Password/Password.mp4)
