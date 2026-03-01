@@ -31,7 +31,7 @@ endmodule
 
 ---
 
-## Código del testbench: Num_Primos_tb.v
+## Num_Primos_tb.v
 
 El testbench genera valores de entrada del 0 al 15 para verificar el funcionamiento del sistema durante la simulación.
 
